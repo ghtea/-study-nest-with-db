@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Param, Delete, Patch, Query, UsePipes, ValidationPipe, ParseIntPipe } from '@nestjs/common';
+import { Body, Controller, Get, Post, Param, Delete, Patch, Query, UsePipes, ValidationPipe, ParseIntPipe, Logger } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { TaskStatusValidationPipe } from './pipes/task-status-validation.pipe';
@@ -8,6 +8,7 @@ import { TasksService } from './tasks.service';
 
 @Controller('tasks')
 export class TasksController {
+  private logger = new Logger('TasksController');
   constructor(private tasksService: TasksService){}
 
   @Get()
@@ -18,6 +19,7 @@ export class TasksController {
 
   @Get('/:id')
   getTaskById(@Param('id', ParseIntPipe) id:number): Promise<Task>{
+    this.logger.verbose(`Looking for task which is id "${id}"`);
     return this.tasksService.getTaskById(id);
   }
 
